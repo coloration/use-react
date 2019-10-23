@@ -31,7 +31,6 @@ function LocalI18nCreateButton () {
     [I18nLanguages.EN_US]: { btn: 'Create' }
   })
 
-  console.log(222, locale)
   return <button>{locale.btn}</button>
 }
 
