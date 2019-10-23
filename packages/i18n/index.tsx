@@ -1,30 +1,24 @@
-import React, {
-  createContext,
-  useEffect,
-  useState,
-  SFC,
-  useContext,
-} from 'react'
+import React, { createContext, useContext, useEffect, useState, SFC, useCallback } from 'react'
 import { useLocalStorage } from './useLocalStorage'
 
 export enum I18nLanguages {
-  ZH_CN = 'zh-CH',
+  ZH_CN = 'zh-CN',
   EN_US = 'en-US',
 }
 
 export type I18nLocales = {
-  [key: string]: string | { [key: string]: string }
+  [key: string]: { [key: string]: any }
 }
 
-export type I18nContextProps = {
-  lang?: string,
+export type I18nProps = {
+  lang: I18nLanguages,
   setLang: (lang: I18nLanguages) => void,
   locales: I18nLocales,
 }
 
-export const I18nContext = createContext<Partial<I18nContextProps>>({})
+export const I18nContext = createContext<Partial<I18nProps>>({})
 
-function defLang () {
+function defLang() {
   let defaultLang: I18nLanguages
   if (window.navigator) {
     const { language, languages } = window.navigator
@@ -51,24 +45,31 @@ export const I18nProvider: SFC<{
   locales: propLocales,
   storageKey
 }) => {
-  const [lang, setLang] = useLocalStorage(
-    storageKey || 'lang',
-    propLang || defLang()
-  )
 
-  return (
-    <I18nContext.Provider value={{
-      lang, setLang, locales: propLocales
-    }}>
-      { children }
-    </I18nContext.Provider>
-  )
-}
+    
+    const [storageLang, setStorageLang] = useLocalStorage(
+      storageKey || 'lang', propLang || defLang()
+    )
 
+    return (
+      <I18nContext.Provider value={{
+        lang: storageLang,
+        setLang: setStorageLang,
+        locales: propLocales,
+      }}>
+        {children}
+      </I18nContext.Provider>
+    )
+  }
+
+/**
+ * 
+ * @param componentLocales use this param as locales instead of I18Provider's locales prop
+ */
 export const useLocale = (locales?: I18nLocales) => {
   const { lang, locales: rootLocales } = useContext(I18nContext)
-  const currentLocales = locales || rootLocales
 
+  const currentLocales = locales || rootLocales
   if (!currentLocales)
     throw new Error('please set a root locales or component locales at least')
 
@@ -77,7 +78,7 @@ export const useLocale = (locales?: I18nLocales) => {
   useEffect(() => {
     setLocale(currentLocales[lang])
   }, [lang])
-  
+
   return [locale, setLocale]
 }
 
@@ -86,4 +87,4 @@ export const useLang = () => {
   return [lang, setLang]
 }
 
-export { useLocalStorage }
+export { useLocalStorage } from './useLocalStorage'
