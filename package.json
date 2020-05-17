@@ -1,7 +1,30 @@
 {
-  "name": "root",
-  "private": true,
+  "name": "@coloration/hooks",
+  "version": "0.0.1",
+  "description": "hooks",
+  "main": "lib/index.js",
+  "module": "lib/index.js",
+  "types": "./types",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rm -rf ./lib & rm -rf ./types & tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coloration/hooks.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/coloration/hooks/issues"
+  },
+  "homepage": "https://github.com/coloration/hooks#readme",
+  "dependencies": {
+    "react": "^16.13.1"
+  },
   "devDependencies": {
-    "lerna": "^3.16.4"
+    "@types/react": "^16.9.35",
+    "typescript": "^3.9.2"
   }
 }

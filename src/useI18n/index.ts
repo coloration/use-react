@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useEffect, useState, SFC, useCallback } from 'react'
-import { useLocalStorage } from './useLocalStorage'
+import React, { createContext, useContext, useEffect, useState, SFC } from 'react'
+import { useLocalStorage } from '../useLocalStorage'
 
 export enum I18nLanguages {
   ZH_CN = 'zh-CN',
@@ -10,13 +10,13 @@ export type I18nLocales = {
   [key: string]: { [key: string]: any }
 }
 
-export type I18nProps = {
+export interface I18nProps {
   lang: I18nLanguages,
   setLang: (lang: I18nLanguages) => void,
   locales: I18nLocales,
 }
 
-export const I18nContext = createContext<Partial<I18nProps>>({})
+export const I18nContext = createContext<Partial<I18nProps>>(Object.create(null))
 
 function defLang() {
   let defaultLang: I18nLanguages
@@ -46,21 +46,19 @@ export const I18nProvider: SFC<{
   storageKey
 }) => {
 
-    
-    const [storageLang, setStorageLang] = useLocalStorage(
-      storageKey || 'lang', propLang || defLang()
-    )
+  const [storageLang, setStorageLang] = useLocalStorage(
+    storageKey || 'lang', 
+    propLang || defLang()
+  )
 
-    return (
-      <I18nContext.Provider value={{
-        lang: storageLang,
-        setLang: setStorageLang,
-        locales: propLocales,
-      }}>
-        {children}
-      </I18nContext.Provider>
-    )
-  }
+
+
+  return React.createElement(
+    I18nContext.Provider, 
+    { value: { lang: storageLang, setLang: setStorageLang, locales: propLocales }},
+    children
+  )
+}
 
 /**
  * 
@@ -71,20 +69,18 @@ export const useLocale = (locales?: I18nLocales) => {
 
   const currentLocales = locales || rootLocales
   if (!currentLocales)
-    throw new Error('please set a root locales or component locales at least')
+    throw new Error('please set a root locales or component local locales at least')
 
   const [locale, setLocale] = useState(currentLocales[lang])
 
   useEffect(() => {
     setLocale(currentLocales[lang])
-  }, [lang])
+  }, [ lang ])
 
-  return [locale, setLocale]
+  return [ locale, setLocale ]
 }
 
 export const useLang = () => {
   const { lang, setLang } = useContext(I18nContext)
-  return [lang, setLang]
+  return [ lang, setLang ]
 }
-
-export { useLocalStorage } from './useLocalStorage'
