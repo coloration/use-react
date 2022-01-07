@@ -1,1 +1,0 @@
-export type PlainObject<O = any> = {[key: string]: O}

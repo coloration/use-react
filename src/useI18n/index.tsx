@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useEffect, useState, SFC } from 'react'
+import { PlainObject } from '@coloration/kit'
+import { createContext, useContext, useEffect, useState, FC, createElement, useCallback } from 'react'
 import { useLocalStorage } from '../useLocalStorage'
 
 export enum I18nLanguages {
@@ -7,7 +8,7 @@ export enum I18nLanguages {
 }
 
 export type I18nLocales = {
-  [key: string]: { [key: string]: any }
+  [key: string]: PlainObject
 }
 
 export interface I18nProps {
@@ -16,12 +17,12 @@ export interface I18nProps {
   locales: I18nLocales,
 }
 
-export const I18nContext = createContext<Partial<I18nProps>>(Object.create(null))
+export const I18nContext = createContext<I18nProps>(Object.create(null))
 
 function defLang() {
   let defaultLang: I18nLanguages
-  if (window.navigator) {
-    const { language, languages } = window.navigator
+  if (globalThis.navigator) {
+    const { language, languages } = globalThis.navigator
     defaultLang = (
       language ||
       languages && languages.length && languages[0] ||
@@ -35,7 +36,7 @@ function defLang() {
   return defaultLang
 }
 
-export const I18nProvider: SFC<{
+export const I18nProvider: FC<{
   lang?: I18nLanguages,
   locales?: I18nLocales,
   storageKey?: string
@@ -51,20 +52,24 @@ export const I18nProvider: SFC<{
     propLang || defLang()
   )
 
-
-
-  return React.createElement(
-    I18nContext.Provider, 
-    { value: { lang: storageLang, setLang: setStorageLang, locales: propLocales }},
-    children
-  )
+  return <I18nContext.Provider 
+    value={{
+      lang: storageLang,
+      setLang: setStorageLang,
+      locales: propLocales || {
+        [I18nLanguages.ZH_CN]: {},
+        [I18nLanguages.EN_US]: {}
+      }
+    }}>
+    {children}
+  </I18nContext.Provider>
 }
 
 /**
  * 
- * @param componentLocales use this param as locales instead of I18Provider's locales prop
+ * @param locales use this param as locales instead of I18Provider's locales prop
  */
-export const useLocale = (locales?: I18nLocales) => {
+export function useLocale (locales?: I18nLocales) {
   const { lang, locales: rootLocales } = useContext(I18nContext)
 
   const currentLocales = locales || rootLocales
@@ -80,7 +85,17 @@ export const useLocale = (locales?: I18nLocales) => {
   return [ locale, setLocale ]
 }
 
-export const useLang = () => {
+export function useLang () {
   const { lang, setLang } = useContext(I18nContext)
   return [ lang, setLang ]
+}
+
+export function useTranslation (locales?: I18nLocales) {
+  const [locale] = useLocale(locales)
+
+  const t = useCallback((str: string) => {
+    return (locale || {})[str] ?? str
+  }, [locale])
+
+  return [t]
 }
