@@ -1,0 +1,6 @@
+/pages
+/docs
+tsconfig.json
+*.config.ts
+*.config.js
+node_modules
