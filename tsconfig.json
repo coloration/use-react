@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
     "target": "ES2015",
-    "baseUrl": ".",
     "jsx": "react-jsx",
     "moduleResolution": "Node",
     "lib": ["ESNext", "dom"],
@@ -9,5 +8,10 @@
       "@coloration/use-react": ["./src"]
     },
     "strict": true,
-  }
+    "declaration": true,
+    "allowSyntheticDefaultImports": true,
+    "outDir": "./dist",
+    "declarationDir": "./types",
+  },
+  "exclude": ["demos", "node_modules", "*/**/test.ts", "*.config.ts", "pages"]
 }

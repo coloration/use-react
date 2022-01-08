@@ -6,3 +6,4 @@ dist
 docs-dist
 *.local
 docs
+types
