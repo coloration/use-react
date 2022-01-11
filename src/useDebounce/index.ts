@@ -11,8 +11,8 @@ import { DebounceOption, useDebounceCallback } from '../useDebounceCallback'
  * const [input, setInput, cancel] = useDebounce('')
  * <input onChange={e => setInput(e.target.value)} />
  */
- export function useDebounce<T> (value: T, options: DebounceOption = 200) {
-  const [debounced, setDebounced] = useState(value)
+ export function useDebounce<T> (value: T | (() => T), options: DebounceOption = 200) {
+  const [debounced, setDebounced] = useState<T>(value)
   const [updater, cancel] = useDebounceCallback<T>(setDebounced, options, [])
 
   return [debounced, updater, cancel] as [T, typeof updater, typeof cancel]

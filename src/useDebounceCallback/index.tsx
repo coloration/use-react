@@ -25,6 +25,7 @@ export type DebounceOption = number | Partial<DebounceOptionObject>
  * 
  * <input onChange={handleInput} />
  */
+
 export function useDebounceCallback <T = any>(fn: (...args: any[]) => T | Promise<T> | void, option: DebounceOption, deps: any[]) {
 
   const { ms, catchCancel } = Object.assign<DebounceOptionObject, Partial<DebounceOptionObject>>(
