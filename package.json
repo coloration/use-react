@@ -1,7 +1,7 @@
 {
   "name": "@coloration/use-react",
   "description": "One extension library of basic hooks",
-  "files": ["dist"],
+  "files": ["dist", "types"],
   "main": "./dist/index.umd.js",
   "module": "./dist/index.es.js",
   "exports": {
@@ -10,7 +10,7 @@
       "require": "./dist/index.umd.js"
     }
   },
-  "version": "0.0.1-alpha.3",
+  "version": "0.0.1-alpha.4",
   "typings": "types/index.d.ts",
   "repository": {
     "url": "https://github.com/coloration/use-react"
