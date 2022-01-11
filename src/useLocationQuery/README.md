@@ -10,6 +10,6 @@ type UseLocationQueryHook = <T = PlainObject>(query?: T, raw?: boolean) => [T, (
 ```
 
 
-## demo
+## Demo
 
-<Demo src="./demos/demo1.tsx" />
+<Demo src="./demos/normal.tsx" />
