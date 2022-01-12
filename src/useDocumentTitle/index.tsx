@@ -11,17 +11,17 @@ import { useEffect, useState } from 'react'
   }
 ) {
   const [title, setTitle] = useState(defaultTitle ?? globalThis.document.title ?? null)
-  const [formatTitle, setFormatTitle] = useState(defaultTitle ?? '')
+  const [fullTitle, setFullTitle] = useState(defaultTitle ?? '')
   const TMP = '%s'
   useEffect(() => {
     const tem = options?.template ?? TMP
-    setFormatTitle(tem.replace(TMP, title))
+    setFullTitle(tem.replace(TMP, title))
   }, [options?.template, title])
 
   useEffect(() => {
-    if (formatTitle === globalThis.document.title) return
-    globalThis.document.title = formatTitle
-  }, [formatTitle])
+    if (fullTitle === globalThis.document.title) return
+    globalThis.document.title = fullTitle
+  }, [fullTitle])
 
-  return { title, formatTitle, setTitle, setFormatTitle }
+  return { title, fullTitle, setTitle }
 }

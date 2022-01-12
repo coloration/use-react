@@ -1,14 +1,19 @@
-import { useMemo, useEffect, useState, useRef } from 'react'
-import { useThrottleCallback } from './useThrottle'
+import { useMemo, useEffect, useState, useRef, RefObject } from 'react'
+import { useThrottleCallback } from '../useThrottleCallback'
 
 /**
  * usage: 
  *  useScrollDraggable(ref.current, { mode: 'x', throttle: 100 })
  */
- export function useScrollDraggable (el: HTMLElement | null, options?: {
-  mode?: 'x' | 'y' | 'all' /* | 'each' */,
-  throttle?: number
-}) {
+ export function useScrollDraggable (
+  el: HTMLElement | null, 
+  deps: any[],
+  options?: {
+    mode?: 'x' | 'y' | 'all' /* | 'each' */,
+    throttle?: number
+  },
+  
+) {
   
   const [isDragging, setIsDragging] = useState(false)
   const position = useRef({ x: -1, y: -1 })
@@ -17,7 +22,9 @@ import { useThrottleCallback } from './useThrottle'
   }, [options])
 
   const [handleMouseMove] = useThrottleCallback((e: MouseEvent) => {
+    console.log(2222)
     if (!el) return 
+    console.log(3333)
     const { x, y } = position.current
     let { mode } = opts
       if (mode === 'all') {
@@ -49,10 +56,13 @@ import { useThrottleCallback } from './useThrottle'
 
   }, opts.throttle, [el, opts.mode])
   
+  console.log(0)
   useEffect(() => {
+    console.log('1111', el)
     if (!el) return
     const handleMouseDown = (e: MouseEvent) => {
       setIsDragging(true)
+      
       Object.assign(position.current, { x: e.pageX, y: e.pageY })
      
       document.addEventListener("mousemove", handleMouseMove)
@@ -77,7 +87,7 @@ import { useThrottleCallback } from './useThrottle'
       document.removeEventListener("mouseup", handleMouseUp)
     }    
 
-  }, [el, handleMouseMove])
+  }, [el, handleMouseMove, ...deps])
 
   return {
     isDragging,

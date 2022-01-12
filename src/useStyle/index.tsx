@@ -14,5 +14,5 @@ export function useStyle (
     ))
   }, deps)
 
-  return [newStyle, setStyle] as [string, typeof setStyle]
+  return [newStyle, setStyle] as [CSSProperties, typeof setStyle]
 }
